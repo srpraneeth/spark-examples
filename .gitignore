@@ -16,3 +16,7 @@ project/plugins/project/
 *.class
 *.log
 
+*.DS_Store
+.idea
+project/
+checkpoint/

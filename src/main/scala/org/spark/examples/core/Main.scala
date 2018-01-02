@@ -7,6 +7,7 @@ import org.apache.spark.sql.{Dataset, Encoders, SQLContext, SparkSession}
 
 import scala.reflect.ClassTag
 import org.apache.spark.{SparkConf, SparkContext}
+import org.spark.examples.core.RDDMain._
 
 object Main extends App {
 
@@ -152,8 +153,8 @@ object Main extends App {
 
 }
 
-case class Team(id: Int, name: String, code: String)
-case class Match(id: Int, date: String, teamId: Int, opponentId:Int, seasonId: Int, venue: String)
+//case class Team(id: Int, name: String, code: String)
+//case class Match(id: Int, date: String, teamId: Int, opponentId:Int, seasonId: Int, venue: String)
 case class Ball(matchId: Int, inningsId: Int, overId: Int, ballId: Int, battingTeamId: Int, bowlingTeamId: Int, strikerId: Int, nonStrikerId: Int, bowlerId: Int,
                 scored:Option[Int], extraType: String, extraRuns: Option[Int], playerDismissed: Option[Int], playerDismissalType: String, fielderId: Option[Int])
 case class Player(Player_Id: String, Player_Name:String, dob:String, Batting_Hand:String, Bowling_Skill: String, Country:String, Is_Umpire:Boolean)

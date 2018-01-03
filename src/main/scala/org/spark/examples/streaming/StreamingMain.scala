@@ -6,7 +6,15 @@ import org.apache.spark.streaming.{Seconds, State, StateSpec, StreamingContext}
 import org.spark.examples.core.utils.RDDUtils._
 import org.spark.examples.streaming.StreamingUtils._
 
+/**
+  * Use case is to calculate the Running batting average of the Player using spark streams.
+  * In cricket, a player's batting average is the total number of runs they have scored divided by the number of times they have been out.
+  * https://en.wikipedia.org/wiki/Batting_average
+  */
 object StreamingMain extends App {
+
+  val LOCALHOST = "localhost"
+  val PORT = 9999
 
   // Creating a new Spark StreamingContext with window interval of 5 seconds
   val sparkConf = new SparkConf()
@@ -19,7 +27,7 @@ object StreamingMain extends App {
 
   // Read the Ball By Ball csv file and create an Initial PairRDD with player id as the key and
   // value is another tuple where key is total runs scored and value is no of times player has gone out
-  val rddInitialBallByBall = getRDD[(Int, (Int, Int))](ssc.sparkContext, "file:///Users/pramesh/Downloads/indian-premier-league-csv-dataset/Ball_by_Ball.csv", ballString => {
+  val rddInitialBallByBall = getRDD[(Int, (Int, Int))](ssc.sparkContext, "./data/indian-premier-league-csv-dataset/Ball_by_Ball.csv", ballString => {
     val tokens = ballString.split(",")
     (tokens(6).toInt, (getRun(tokens(10)), getOutOrNot(tokens(13))))
   }).reduceByKey {
@@ -29,7 +37,8 @@ object StreamingMain extends App {
   rddInitialBallByBall.foreach { println }
 
   // Creating a Socket Stream from the localhost port 9999 from the StreamingContext created earlier
-  val newBallByBallStream = ssc.socketTextStream("localhost", 9999, StorageLevel.MEMORY_AND_DISK)
+  // This could be any other type of stream like Kafka, Kinesis, Custom Stream etc
+  val newBallByBallStream = ssc.socketTextStream(LOCALHOST, PORT, StorageLevel.MEMORY_AND_DISK)
 
   // Get the Player Id, runs scored and isPlayer out or not from  the input newBall data from the Str
   val newPlayerRunsOutStream = newBallByBallStream.map { newBall => {

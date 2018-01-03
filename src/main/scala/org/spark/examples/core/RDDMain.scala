@@ -21,7 +21,7 @@ import org.spark.examples.core.utils.RDDUtils._
   */
 object RDDMain extends App {
 
-  val conf = new SparkConf setAppName("RDD-Example") setMaster("local[2]")
+  val conf = new SparkConf setAppName("Team-Matches-RDD-Example") setMaster("local[2]")
   val sc = new SparkContext(conf)
   sc.setLogLevel("WARN")
 
@@ -30,7 +30,6 @@ object RDDMain extends App {
   // Reading the Team CSV files to create a RDD of Teams.
   // Actual reading of the file does not happen at this point, only when a driver operation is called the actual file is read.
   // val rddTeams = getRDD[Team]("hdfs://1be6d737776c:9000/indian-premier-league-csv-dataset/Team.csv", team => {
-//  val rddTeams = getRDD[Team](sc, "file:///Users/pramesh/Downloads/indian-premier-league-csv-dataset/Team.csv", teamString => {
   val rddTeams = getRDD[Team](sc, "./data/indian-premier-league-csv-dataset/Team.csv", teamString => {
     val tokens = teamString split(",")
     Team(tokens(0) toInt, tokens(1), tokens(2))

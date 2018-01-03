@@ -82,6 +82,14 @@ object SQLMain extends App {
     "FROM BALL b JOIN PLAYER p WHERE p.Player_Id = b.strikerId AND b.scored IN (4,6) GROUP BY p.Player_Name, b.matchId, b.scored ORDER BY NoOfBoundaries DESC ").show
 
 
+  // To convert a DataFrame to a DataSet of type Ball
+  val playerDS = playerDf.as[Player]
+  // Compare the result difference between ballDF.printSchema and ballDS.printSchema
+  playerDS.printSchema
+  playerDS.select(s"Player_Name", s"Country").where(s"Country = 'India'").show
+  playerDS.createOrReplaceTempView("PlayerDS")
+  sparkSession.sql("SELECT * FROM PlayerDS").show
+
 
   case class Ball(matchId: Int, inningsId: Int, overId: Int, ballId: Int, battingTeamId: Int, bowlingTeamId: Int, strikerId: Int, nonStrikerId: Int, bowlerId: Int,
                   scored:Option[Int], extraType: String, extraRuns: Option[Int], playerDismissed: Option[Int], playerDismissalType: String, fielderId: Option[Int])

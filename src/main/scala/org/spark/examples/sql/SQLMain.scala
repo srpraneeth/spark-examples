@@ -76,11 +76,16 @@ object SQLMain extends App {
 
   ballDF.createOrReplaceTempView("Ball")
 
-  // Example to show a complex query with join groupby orderby and filter
+  // Example to show a complex query with join group by order by and filter
   // This joins the player and ball dataset to find the players with most Boundaries(6Runs or 4Runs) in desc order with the no of boundaries scored by them in each match
   sparkSession.sql("SELECT b.matchId AS MatchNo, p.Player_Name AS Player, count(b.scored) AS NoOfBoundaries, b.scored AS 6RunsOr4Runs " +
-    "FROM BALL b JOIN PLAYER p WHERE p.Player_Id = b.strikerId AND b.scored IN (4,6) GROUP BY p.Player_Name, b.matchId, b.scored ORDER BY NoOfBoundaries DESC ").show
+    "FROM BALL b JOIN PLAYER p " +
+    "WHERE p.Player_Id = b.strikerId " +
+    "AND b.scored IN (4,6) " +
+    "GROUP BY p.Player_Name, b.matchId, b.scored " +
+    "ORDER BY NoOfBoundaries DESC ").show
 
+  // Data Set API
 
   // To convert a DataFrame to a DataSet of type Ball
   val playerDS = playerDf.as[Player]
@@ -90,10 +95,9 @@ object SQLMain extends App {
   playerDS.createOrReplaceTempView("PlayerDS")
   sparkSession.sql("SELECT * FROM PlayerDS").show
 
-
-  case class Ball(matchId: Int, inningsId: Int, overId: Int, ballId: Int, battingTeamId: Int, bowlingTeamId: Int, strikerId: Int, nonStrikerId: Int, bowlerId: Int,
-                  scored:Option[Int], extraType: String, extraRuns: Option[Int], playerDismissed: Option[Int], playerDismissalType: String, fielderId: Option[Int])
-  case class Player(Player_Id: String, Player_Name:String, dob:String, Batting_Hand:String, Bowling_Skill: String, Country:String, Is_Umpire:Boolean)
-
-
 }
+
+case class Ball(matchId: Int, inningsId: Int, overId: Int, ballId: Int, battingTeamId: Int, bowlingTeamId: Int, strikerId: Int, nonStrikerId: Int, bowlerId: Int,
+                scored:Option[Int], extraType: String, extraRuns: Option[Int], playerDismissed: Option[Int], playerDismissalType: String, fielderId: Option[Int])
+case class Player(Player_Id: String, Player_Name:String, dob:String, Batting_Hand:String, Bowling_Skill: String, Country:String, Is_Umpire:Boolean)
+

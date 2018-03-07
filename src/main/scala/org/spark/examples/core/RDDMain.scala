@@ -17,7 +17,6 @@ import org.spark.examples.core.utils.RDDUtils._
   * 7) Sort
   * 8) Take
   * 9) Save Results
-  *
   */
 object RDDMain extends App {
 
